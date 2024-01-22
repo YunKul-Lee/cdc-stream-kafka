@@ -46,3 +46,33 @@ services:
       - CONFIG_STORAGE_TOPIC=debezium_configs
       - OFFSET_STORAGE_TOPIC=debezium_offsets
       - STATUS_STORAGE_TOPIC=debezium_statuses
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:lastest
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+      - KAFKA_CLUSTERS_0_SCHEMA_REGISTRY=http://localhost:8081
+      - SPRING_PROFILES_ACTIVE=prod
+    ports:
+      - "9000:8080"
+    depends_on:
+      - kafka
+
+  debezium-ui:
+    image: debezium/debezium-ui:2.4
+    platform: linux/amd64
+    environment:
+      - KAFKA_CONNECT_URIS=http://connect:8083
+    ports:
+      - 9091:8080
+    depends_on:
+      - connect
+
+#  setup-debezium-connector:
+
+
+
+
+
