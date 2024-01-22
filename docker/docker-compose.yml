@@ -70,9 +70,42 @@ services:
     depends_on:
       - connect
 
-#  setup-debezium-connector:
-
-
+  setup-debezium-connector:
+    image: curlimages/curl
+    depends_on:
+      - connect
+    links:
+      - connect
+    environment:
+      DEBEZIUM_CONFIG: |
+        {
+          "name": "postgresql-connector",
+          "config": {
+            "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+            "connector.displayName": "PostgreSQL",
+            "topic.prefix": "pg-changes",
+            "database.user": "postgres",
+            "database.dbname": "db_local",
+            "table.exclude.list": "audit",
+            "database.hostname": "database",
+            "database.password": "postgres",
+            "name": "postgresql-connector",
+            "connector.id": "postgres",
+            "plugin.name": "pgoutput"
+          }
+        }
+    command: >
+      sh -c "
+        sleep 10;
+        echo Waiting for Kafka Connect to start listening on connect:8083...;
+        while ! nc -z connect 8083;
+        do
+          sleep 1;
+        done;
+        echo Kafka Connect is up!;
+        echo $$DEBEZIUM_CONFIG > /tmp/debezium-connector-config.json
+        curl -X POST -H \"Content-Type: application/json\" --data @/tmp/debezium-connector-config.json http:.//connect:8083/connectors;
+      "
 
 
 
