@@ -48,7 +48,7 @@ services:
       - STATUS_STORAGE_TOPIC=debezium_statuses
 
   kafka-ui:
-    image: provectuslabs/kafka-ui:lastest
+    image: provectuslabs/kafka-ui:latest
     environment:
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
