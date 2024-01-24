@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.jake.cdc.config.jackson.MillisToLocalDateTimeDeserializer;
 import com.jake.cdc.config.jackson.OperationTypeDeserializer;
 import lombok.Data;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -39,30 +38,6 @@ public class DebeziumEventDto {
 
             @JsonProperty("txId")
             private long transactionId;
-        }
-    }
-
-    @Getter
-    public enum OperationType {
-        CREATE("c"),
-        UPDATE("u"),
-        DELETE("d"),
-        READ("r");
-
-        private final String code;
-
-        OperationType(String code) {
-            this.code = code;
-        }
-
-        public static OperationType fromCode(String code) {
-            for(OperationType type : OperationType.values()) {
-                if(type.getCode().equals(code)) {
-                    return type;
-                }
-            }
-
-            throw new IllegalArgumentException("Unknown operation type code: " + code);
         }
     }
 }
